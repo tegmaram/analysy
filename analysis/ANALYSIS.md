@@ -194,8 +194,13 @@ aligned offsets:
     timestamp `2025-11-10T08:00:50Z`.
   * Nested/vendor signature carries the original organization
     **`PAutel Intelligent Technology Corp., Ltd`** (BMPString inside the blob).
-* **Interpretation:** a real, WHQL-accepted third-party driver — not something
-  the cheat author compiled. It exposes physical/process memory primitives and
+* **Interpretation (full RE in [DRIVER_RE.md](DRIVER_RE.md)):** a real,
+  WHQL-accepted third-party driver — not something the cheat author compiled.
+  It creates `\Device\mLnUcWtv9IaZf8LBiMXD` (+ `\DosDevices\…`, i.e.
+  `\\.\mLnUcWtv9IaZf8LBiMXD`, device type `0x22`) with exactly two IOCTLs —
+  `0x222004` (attach to a PID, gated by magic `0x2AFBBBDC`, then kernel-side
+  read/write/patch) and `0x222024` (force-delete any file, bypassing in-use
+  locks). Its three operational strings are UTF-16 XOR 0xAA. It exposes physical/process memory primitives and
   is shipped as a **Bring Your Own Vulnerable Driver** kernel bypass. Because it
   is timestamped, its *expired* certificate does not prevent loading on current
   Windows builds; only the driver blocklist / HVCI would.
@@ -296,7 +301,9 @@ performance overlays that would expose the cheat.
 | Write into anti-cheat directory | **Yes** | `…\EasyAntiCheat\SplashScreen.png` replacement |
 | Process injection (manual map) | **Yes** | carrier DLL + `OpenProcess`/`WriteProcessMemory`; thread creation is resolved dynamically from `ntdll` (not in the IAT), so the exact API is only visible at run time |
 | Game memory read/write | **Yes** | `Read/WriteProcessMemory`, `DeviceIoControl`, `[gobjects]` dumper |
-| Input synthesis (hotkeys) | **Yes** | `GetAsyncKeyState` (payload), `SendInput` (loader) |
+| Input synthesis (hotkeys) | **Yes** | `GetAsyncKeyState` ×43 call sites with literal VK codes (payload), `SendInput` (loader) |
+| Keylogging | **No** | no hook/state/ToUnicode APIs; see §5.1 |
+| Discord/Telegram webhook, C2 upload | **No** | no webhook strings, no HTTP stack in the payload; see §5.1 |
 | Anti-analysis string obfuscation | **Yes** | all loader strings XOR-encrypted 16-byte blocks |
 | Anti-debug / VM checks | **Not found** | `IsDebuggerPresent` is only the standard CRT stub import |
 | Persistence (Run keys, scheduled task, service of itself) | **Not found** | only the temporary driver service, deleted after use |
@@ -304,6 +311,27 @@ performance overlays that would expose the cheat.
 | Ransomware / destructive behaviour | **Not found** | no crypto file APIs, no shadow-copy/WMI deletion |
 | C2 beaconing / TLS to attacker infrastructure | **Not found** | only one WinINet request (the PNG) |
 | Exfiltration | **Not found** | no archive/upload code |
+
+### 5.1 Targeted hunt: webhook, keylogger, stealer (negative result)
+
+Because "free" cheats are frequently trojanised, every module was searched
+specifically for the two capabilities people usually ask about:
+
+| Question | Result | Evidence |
+|---|---|---|
+| **Discord/Telegram webhook?** | **No** | zero hits for `webhook`, `/api/webhooks`, `discord.com/api`, `discordapp`, `api.telegram`, `bot<token>` in ASCII **and** UTF-16; the only URLs in the entire file are `files.catbox.moe/pvtjo9.png` plus Microsoft CRL/OCSP URLs inside the driver's Authenticode blob. The cheat DLL links **no** networking library at all (no `WININET`, `WINHTTP`, `WS2_32`, `URLMON`). |
+| **Keylogger?** | **No** | `SetWindowsHookEx`, `WH_KEYBOARD`, `GetKeyboardState`, `GetKeyState`, `ToUnicode(Ex)`, `MapVirtualKey`, `RegisterRawInputDevices`, `GetForegroundWindow`/`GetWindowText` — **none imported anywhere**. The cheat DLL imports exactly one input API, `GetAsyncKeyState`, at **43 call sites, 38 of which use a literal virtual-key code** (`0x11` CTRL, `0x20` SPACE, `0x41/0x44/0x53` A/D/S, `0x56/0x57` V/W, `0x74/0x77` F5/F8, `0xA0` LSHIFT, `0x02` right mouse …) — i.e. a **hotkey table**, not a 0x00–0xFF sweep, and the DLL never buffers, files or transmits keystrokes. |
+| **Credential / token / wallet stealer?** | **No** | no `Login Data`, `Local State`, `leveldb`, `Cookies`, `wallet`, `MetaMask`, `AppData\Roaming\<browser>` paths; no archive/upload code. |
+
+Caveat: this is a static conclusion for **this** build. It does not certify the
+distributor will not ship a trojanised rebuild, and the unexamined remote PNG
+(see §11) remains an unverified delivery channel.
+
+The kernel driver itself was fully disassembled: see
+[DRIVER_RE.md](DRIVER_RE.md) — it is a two-IOCTL memory-access service
+(`\\.\mLnUcWtv9IaZf8LBiMXD`, `IOCTL 0x222004` / `0x222024`, authorisation magic
+`0x2AFBBBDC`), not a generic rootkit: no process/registry/file-system callbacks,
+no network hooks.
 
 ---
 
@@ -424,9 +452,15 @@ file host abused by this and many other cheats/malware).
    level only; a full disassembly is a separate project.
 3. The driver was not disassembled instruction-by-instruction; its IOCTL surface
    should be compared against public LOLDrivers/blocklist entries.
-4. If the PNG were fetched through a proxy (never directly), its content could be
-   analysed to see whether the distributor uses the "splash" channel to deliver
-   a second stage.
+4. The PNG could not be retrieved during this analysis: the analysis sandbox
+   permits egress only to a small allow-list of package/repository hosts, so
+   `files.catbox.moe` is unreachable (`curl` → `SSL_ERROR_SYSCALL`, fetch → HTTP
+   500). This is a *limitation*, not a judgement that the file is benign: the
+   routine that consumes it writes it as a `.png` and only moves it into the
+   EAC folder, but the remote object is attacker-controlled and can change at
+   any time. If you need it: fetch once through an isolated VM/proxy with a
+   throwaway User-Agent, `sha256sum` it before opening, check the magic bytes
+   (`file`/`xxd | head`), and never let it execute.
 
 ## 12. References
 

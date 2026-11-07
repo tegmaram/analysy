@@ -70,6 +70,28 @@ nvsphelper64.exe, ow-obs.exe, ow-overlay.exe, squirrel.exe,
 * Console window (`AllocConsole`) inside the game process; hotkeys read with
   `GetAsyncKeyState`.
 
+## 4.1 Kernel-driver IOCs (full RE: [DRIVER_RE.md](DRIVER_RE.md))
+
+| Indicator | Value |
+|---|---|
+| Device object | `\Device\mLnUcWtv9IaZf8LBiMXD` (type `0x22`, `FILE_DEVICE_UNKNOWN`) |
+| Symbolic link / user path | `\DosDevices\mLnUcWtv9IaZf8LBiMXD` → `\\.\mLnUcWtv9IaZf8LBiMXD` |
+| IOCTLs | `0x222004` (process attach + kernel memory R/W, magic `0x2AFBBBDC`) and `0x222024` (force-delete any file) |
+| Authorisation magic | `0x2AFBBBDC` (little-endian bytes `DC BB FB 2A`) |
+| Other string | `\device\physicalmemory` (physical-memory section) |
+| Pool tags | `GDmN` (`0x4E6D4447`), `GSmL` (`0x4C6D5347`), `PyPh` (`0x68507950`), `x46d` (`0x64363478`) |
+| String encoding | UTF-16 **XOR 0xAA** — e.g. `f6 ee cf dc c3 c9 cf f6` = `\Device\` |
+| Kernel constants | PTE base `0xFFFFF68000000000`, marker `0x1122334455667788` |
+
+**Negative findings (explicitly searched, all modules):** no Discord/Telegram
+webhooks, no keylogger APIs (`SetWindowsHookEx`, `GetKeyState`,
+`GetKeyboardState`, `ToUnicode`, `MapVirtualKey`, `RegisterRawInputDevices`,
+`GetForegroundWindow`), no browser/wallet/token paths, no HTTP stack inside the
+cheat DLL. `GetAsyncKeyState` is used with fixed virtual-key codes (hotkeys).
+
+**Not retrievable:** `files.catbox.moe/pvtjo9.png` — blocked by the analysis
+sandbox's egress allow-list; unanalysed, attacker-controlled content.
+
 ## 5. Signature / certificate indicators
 
 | Field | Value |

@@ -123,6 +123,16 @@ rule Embeded_WHQL_Kernel_Driver_PAutel_BYOVD
         $kmdf       = "KmdfLibrary" wide
         $whcp       = "Microsoft Windows Hardware Compatibility Publisher" ascii
         $whql_ca    = "Microsoft Windows Third Party Component CA 2012" ascii
+        /* operational strings are UTF-16 XOR 0xAA: \Device\mLnUcWtv9IaZf8LBiMXD */
+        $xdev       = { f6 ee cf dc c3 c9 cf f6 c7 e6 c4 ff c9 fd de dc }
+        /* \DosDevices\mLnUcWtv9IaZf8LBiMXD */
+        $xsym       = { f6 ee c5 d9 ee cf dc c3 c9 cf d9 f6 c7 e6 c4 ff c9 }
+        /* \device\physicalmemory */
+        $xphys      = { f6 ce cf dc c3 c9 cf f6 da c2 d3 d9 c3 c9 cb c6 }
+        /* IOCTL 0x222004 / 0x222024 and the 0x2AFBBBDC handshake */
+        $ioctl1     = { 04 20 22 00 }
+        $ioctl2     = { 24 20 22 00 }
+        $magic      = { dc bb fb 2a }
 
     condition:
         uint16(0) == 0x5A4D and
@@ -139,6 +149,8 @@ rule Embeded_WHQL_Kernel_Driver_PAutel_BYOVD
         ) and
         (
             $vendor or
-            ($whcp and $whql_ca and $phys)
+            ($whcp and $whql_ca and $phys) or
+            ($xdev and $xsym and $xphys and $ioctl1 and $ioctl2) or
+            ($xdev and $magic)
         )
 }

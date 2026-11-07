@@ -84,6 +84,7 @@ Detections: **[yara/linou_free.yar](yara/linou_free.yar)**
 ├── "linou free.exe"           ← the sample (evidence, DO NOT EXECUTE)
 ├── analysis/
 │   ├── ANALYSIS.md            ← full static analysis report
+│   ├── DRIVER_RE.md           ← full reverse engineering of the kernel driver
 │   └── IOCS.md                ← hashes, URLs, paths, strings, registry keys
 ├── yara/
 │   └── linou_free.yar         ← detection rules for the loader, DLL and driver
