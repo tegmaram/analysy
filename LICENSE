@@ -1,0 +1,196 @@
+# Educational Use Only Licence — Version 1.0
+
+**Project:** `analysy` — Educational Malware Analysis Lab
+**Covered material:** the documentation, analysis notes, YARA rules and
+scripts authored for this repository (the "Material").
+**Date of publication:** 2026-11-07
+
+---
+
+## 0. Plain-language summary (non-binding)
+
+This repository may be **read, studied, quoted and taught from** by anyone who
+wants to learn how malware and game cheats are built and detected. It may
+**not** be used to run the sample, to cheat in a game, to bypass anti-cheat or
+security software, to build or distribute malware, or to make money. The
+sample itself is somebody else's software: it is here as evidence, and this
+licence gives you no rights over it.
+
+If the summary and the numbered terms ever disagree, the numbered terms win.
+
+---
+
+## 1. Definitions
+
+1.1 **"Material"** means the original text, tables, analysis notes, YARA rules,
+configuration and source code created by the author and distributed in this
+repository, including `README.md`, `analysis/*`, `yara/*` and `tools/*`.
+
+1.2 **"Sample"** means the third-party binary distributed alongside the
+Material, currently the file `linou free.exe` (SHA-256
+`7d2c55b9d95203e966f70e5de8a04aa48daccd7a1b5ff9d0b17f5a9a06bc085a`), together
+with every embedded component it contains (loader, cheat DLL, kernel driver,
+downloaded content). The Sample is **not** part of the Material and is **not**
+licensed to you under this document.
+
+1.3 **"Author"** means the contributor(s) of the Material to this repository.
+
+1.4 **"Educational Purpose"** means private study, teaching, academic research,
+CTF/training exercises, detection engineering (writing signatures, rules,
+heuristics, sandbox/EDR logic), and defensive security work — in each case on
+systems and artefacts you own or are expressly authorised in writing to analyse.
+
+1.5 **"Prohibited Purpose"** means any use not covered by Section 2, including
+without limitation those listed in Section 3.
+
+---
+
+## 2. Grant of rights
+
+Subject to full compliance with this licence, the Author grants you a
+worldwide, royalty-free, non-exclusive, non-transferable, revocable licence to:
+
+(a) **read, study and analyse** the Material;
+
+(b) **reproduce and quote** reasonable portions of the Material in
+teaching material, papers, blog posts, reports, training courses and
+discussions, provided you attribute the Author and this repository and link to
+this licence;
+
+(c) **modify and extend** the Material for your own Educational Purpose, and
+publish your derivative work **provided** it is distributed under this same
+licence (or a stricter one) and carries a clear notice that it is for
+educational, defensive use only;
+
+(d) **run the scripts** in `tools/` on artefacts you are authorised to analyse.
+
+No other rights are granted, whether by implication, estoppel or otherwise. In
+particular, no patent or trademark rights are granted, and no rights whatsoever
+are granted in the Sample.
+
+---
+
+## 3. Prohibited uses
+
+You must **not**, and must not permit or assist anyone else to:
+
+(a) **execute, install, load or "test" the Sample** on any system that holds
+real data, credentials, accounts or other people's information, or on any system
+you do not own or are not expressly authorised to infect; the Sample is
+provided for static study only;
+
+(b) **download, mirror, re-upload, package, sell or otherwise redistribute the
+Sample** or any extracted component of it, in whole or in part, including
+through this repository's tooling;
+
+(c) **use the Material or the Sample to cheat**, bot, gain an unfair advantage,
+or otherwise violate the terms of service of any game, platform or service —
+including Fortnite, Epic Games, Easy Anti-Cheat, BattlEye, or any other
+anti-cheat product;
+
+(d) **use the Material or the Sample to bypass, disable, evade, reverse the
+intent of, or interfere with any anti-cheat, DRM, licensing, access-control or
+security technology**, or to circumvent technical protection measures contrary
+to applicable law;
+
+(e) **use the Material to develop, train, improve, distribute or operate
+malware, rootkits, kernel-mode implants, stealers, ransomware, botnets,
+loaders-as-a-service, or "cheat-as-a-service" products**;
+
+(f) **attack, scan, probe, dox, harass or otherwise harm** any person,
+infrastructure or service, including the distributors of the Sample and the
+hosting providers referenced in the analysis (the URLs in `analysis/IOCS.md`
+must never be requested);
+
+(g) **use the Material for any commercial purpose** (including paid courses,
+paid products, consultancy deliverables that reproduce it verbatim, or
+advertising-supported content that redistributes the Sample) without the
+Author's prior written permission;
+
+(h) **remove, obscure or alter** this licence, the authorship notices, or the
+"educational use only" warnings from the Material or any derivative of it;
+
+(i) **misrepresent** the Material as an endorsement of, or a tool for, the
+Sample's authors or their products.
+
+---
+
+## 4. The Sample is third-party evidence
+
+4.1 The Sample is included in this repository solely as **forensic evidence**
+for static study under the quotation/research exceptions available in many
+jurisdictions (e.g. fair use / fair dealing / Art. 5–6 of Directive 2009/24/EC
+for the purpose of study and interoperability research). No licence, express or
+implied, is granted to you in the Sample.
+
+4.2 All rights, title and interest in the Sample — including the embedded
+kernel driver, which carries a signature issued under Microsoft's Windows
+Hardware Compatibility Publisher programme, and all third-party code it
+contains — remain with their respective owners.
+
+4.3 You are solely responsible for determining whether possessing or analysing
+the Sample is lawful where you live. In several jurisdictions, possession of
+circumvention tools or of software intended to defeat technical protection
+measures is itself an offence.
+
+4.4 If you are a rights-holder and believe the presence of the Sample in this
+repository is unlawful, contact the repository owner for removal instead of
+downloading or redistributing it.
+
+---
+
+## 5. No warranty
+
+THE MATERIAL IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, ACCURACY, AND NON-INFRINGEMENT. The Author
+does not warrant that any analysis, indicator, rule or conclusion in the
+Material is complete, current or correct. Malware behaviour changes; the Sample
+may be rebuilt at any time by its distributor.
+
+## 6. Limitation of liability
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE AUTHOR SHALL NOT BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, CONSEQUENTIAL
+OR PUNITIVE DAMAGES, OR FOR ANY LOSS OF DATA, PROFITS, ACCOUNTS, HARDWARE,
+GOODWILL OR REPUTATION, ARISING OUT OF OR IN CONNECTION WITH THE MATERIAL, THE
+SAMPLE, OR YOUR USE OR INABILITY TO USE EITHER — INCLUDING ANY GAME OR PLATFORM
+BAN, ANY SYSTEM COMPROMISE, ANY LEGAL ACTION BY A THIRD PARTY, OR ANY CRIMINAL
+LIABILITY YOU INCUR BY MISUSING THE MATERIAL.
+
+## 7. Indemnity
+
+You agree to indemnify and hold the Author harmless from any claim, demand,
+loss, liability or expense (including reasonable legal fees) arising from your
+use of the Material or the Sample in breach of this licence.
+
+## 8. Termination
+
+8.1 This licence terminates **automatically and immediately** if you breach any
+term of it.
+
+8.2 On termination you must stop using the Material, delete all copies of the
+Material and of the Sample in your possession or control, and cease
+distributing any derivative work.
+
+8.3 Sections 3 to 9 survive termination.
+
+## 9. General
+
+9.1 If any provision of this licence is held unenforceable, the remaining
+provisions remain in full force and the unenforceable provision is construed to
+give the maximum effect permitted by law.
+
+9.2 This licence is the entire agreement between you and the Author regarding
+the Material. It does not replace, limit or expand any obligation you have
+under applicable law, under a third party's terms of service, or under the
+licence of any third-party component.
+
+9.3 Nothing in this licence grants you permission to infringe copyright,
+database rights, trademark rights or any other right of any third party.
+
+---
+
+*By reading, copying, using or distributing the Material you accept these
+terms. If you do not accept them, do not use the Material and delete any copy
+you have.*
